@@ -1,0 +1,16 @@
+Zacznijmy od tego co już potrafisz. Stwórz pierwszą wersję aplikacji, która będzie potrafiła się wyświetlać, a
+dodatkowo przechowywać informacje o jednej książce.
+
+Książkę opisują takie cechy jak:
+
+tytuł,
+autor,
+rok wydania,
+ilość stron,
+wydawnictwo,
+numer ISBN.
+Oczywiście można by tutaj dodać jeszcze kilka informacji, jednak do celów edukacyjnych to nam w zupełności wystarczy.
+Jako pierwszą książkę wprowadźmy do naszego systemu "W pustyni i w puszczy" Henryka Sienkiewicza.
+
+Zacznij od utworzenia w IntelliJ nowego projektu. Następnie utwórz klasę Library.
+
