@@ -8,17 +8,17 @@ public class Book {
     String publisher;
     String isbn;
 
-    Book(String bookTitle, String bookAuthor, int bookReleaseDate, int bookPages, String bookPublisher, String bookIsbn) {
-        this(bookTitle, bookAuthor, bookReleaseDate, bookPages, bookPublisher);
-        isbn = bookIsbn;
+    public Book(String title, String author, int releaseDate, int pages, String publisher) {
+        this.title = title;
+        this.author = author;
+        this.releaseDate = releaseDate;
+        this.pages = pages;
+        this.publisher = publisher;
     }
 
-    Book(String bookTitle, String bookAuthor, int bookReleaseDate, int bookPages, String bookPublisher) {
-        title = bookTitle;
-        author = bookAuthor;
-        releaseDate = bookReleaseDate;
-        pages = bookPages;
-        publisher = bookPublisher;
+    public Book(String title, String author, int releaseDate, int pages, String publisher, String isbn) {
+        this(title, author, releaseDate, pages, publisher);
+        this.isbn = isbn;
     }
 
     public void printInfo() {
