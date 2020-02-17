@@ -9,11 +9,7 @@ public class Book {
     String isbn;
 
     Book(String bookTitle, String bookAuthor, int bookReleaseDate, int bookPages, String bookPublisher, String bookIsbn) {
-        title = bookTitle;
-        author = bookAuthor;
-        releaseDate = bookReleaseDate;
-        pages = bookPages;
-        publisher = bookPublisher;
+        this(bookTitle, bookAuthor, bookReleaseDate, bookPages, bookPublisher);
         isbn = bookIsbn;
     }
 
