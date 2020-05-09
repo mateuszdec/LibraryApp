@@ -40,6 +40,7 @@ public class Book extends Publication {
         this.author = author;
     }
 
+    @Override
     public void printInfo() {
         String info = getTitle() + "; " + author + "; " + getYear() + "; "
                 + pages + "; " + getPublisher() + "; " + isbn;

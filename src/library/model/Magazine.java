@@ -31,6 +31,7 @@ public class Magazine extends Publication {
         this.language = language;
     }
 
+    @Override
     public void printInfo() {
         String info = getTitle() + "; " + getPublisher() + "; " + getYear() + "-"
                 + month + "-" + day + "; " + language;
