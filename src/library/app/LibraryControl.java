@@ -13,7 +13,7 @@ import java.util.InputMismatchException;
 public class LibraryControl {
 
     private ConsolePrinter printer = new ConsolePrinter();
-    private DataReader dataReader = new DataReader();
+    private DataReader dataReader = new DataReader(printer);
 
     private Library library = new Library();
 
@@ -40,7 +40,7 @@ public class LibraryControl {
                     exit();
                     break;
                 default:
-                    System.out.println("Nie ma takiej opcji, wprowadź ponownie: ");
+                    printer.printLine("Nie ma takiej opcji, wprowadź ponownie: ");
             }
         } while (option != Option.EXIT);
     }
@@ -48,7 +48,7 @@ public class LibraryControl {
     private Option getOption() {
         boolean optionOk = false;
         Option option = null;
-        while (optionOk) {
+        while (!optionOk) {
             try {
                 option = Option.createFromInt(dataReader.getInt());
                 optionOk = true;
@@ -62,20 +62,33 @@ public class LibraryControl {
     }
 
     private void printOptions() {
-        System.out.println("Wybierz opcję: ");
+        printer.printLine("Wybierz opcję: ");
         for (Option option : Option.values()) {
-            System.out.println(option);
+            printer.printLine(option.toString());
         }
     }
 
     private void addBook() {
-        Book book = dataReader.readAndCreateBook();
-        library.addBook(book);
+        try {
+            Book book = dataReader.readAndCreateBook();
+            library.addBook(book);
+        } catch (InputMismatchException e) {
+            printer.printLine("Nie udało się utworzyć książki, niepoprawne dane.");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            printer.printLine("Osiągnięto limit pojemności, nie można dodać kolejnej książki");
+        }
     }
 
     private void printBooks() {
-        Publication[] publications = library.getPublications();
-        printer.printBooks(publications);
+        try {
+            Publication[] publications = library.getPublications();
+            printer.printBooks(publications);
+        } catch (InputMismatchException e) {
+            printer.printLine("Nie udało się utworzyć magazynu, niepoprawne dane.");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            printer.printLine("Osiągnięto limit pojemności, nie można dodać kolejnego magazynu");
+        }
+
     }
 
     private void addMagazine() {
@@ -89,7 +102,7 @@ public class LibraryControl {
     }
 
     private void exit() {
-        System.out.println("Koniec programu, papa!");
+        printer.printLine("Koniec programu, papa!");
         // zamykamy strumień wejścia
         dataReader.close();
     }
