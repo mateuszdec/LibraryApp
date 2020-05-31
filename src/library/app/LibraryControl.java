@@ -2,6 +2,7 @@ package library.app;
 
 import library.exception.DataExportException;
 import library.exception.DataImportException;
+import library.exception.InvalidDataException;
 import library.exception.NoSuchOptionException;
 import library.io.ConsolePrinter;
 import library.io.DataReader;
@@ -27,7 +28,7 @@ public class LibraryControl {
         try {
             library = fileManager.importData();
             printer.printLine("Zaimportowano dane z pliku");
-        } catch (DataImportException e) {
+        } catch (DataImportException | InvalidDataException e) {
             printer.printLine(e.getMessage());
             printer.printLine("Zainicjowano nową bazę.");
             library = new Library();
@@ -89,7 +90,7 @@ public class LibraryControl {
     private void addBook() {
         try {
             Book book = dataReader.readAndCreateBook();
-            library.addBook(book);
+            library.addPublication(book);
         } catch (InputMismatchException e) {
             printer.printLine("Nie udało się utworzyć książki, niepoprawne dane.");
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -98,20 +99,19 @@ public class LibraryControl {
     }
 
     private void printBooks() {
+        Publication[] publications = library.getPublications();
+        printer.printBooks(publications);
+    }
+
+    private void addMagazine() {
         try {
-            Publication[] publications = library.getPublications();
-            printer.printBooks(publications);
+            Magazine magazine = dataReader.readAndCreateMagazine();
+            library.addPublication(magazine);
         } catch (InputMismatchException e) {
             printer.printLine("Nie udało się utworzyć magazynu, niepoprawne dane.");
         } catch (ArrayIndexOutOfBoundsException e) {
             printer.printLine("Osiągnięto limit pojemności, nie można dodać kolejnego magazynu");
         }
-
-    }
-
-    private void addMagazine() {
-        Magazine magazine = dataReader.readAndCreateMagazine();
-        library.addMagazine(magazine);
     }
 
     private void printMagazines() {
