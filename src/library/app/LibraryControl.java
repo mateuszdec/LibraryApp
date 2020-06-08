@@ -1,20 +1,11 @@
 package library.app;
 
-import library.exception.DataExportException;
-import library.exception.DataImportException;
-import library.exception.InvalidDataException;
-import library.exception.NoSuchOptionException;
+import library.exception.*;
 import library.io.ConsolePrinter;
 import library.io.DataReader;
 import library.io.file.FileManager;
 import library.io.file.FileManagerBuilder;
-import library.model.Book;
-import library.model.Library;
-import library.model.Magazine;
-import library.model.Publication;
-import library.model.comparator.AlphabeticalComparator;
-
-import java.util.Arrays;
+import library.model.*;
 import java.util.InputMismatchException;
 
 public class LibraryControl {
@@ -29,13 +20,12 @@ public class LibraryControl {
         fileManager = new FileManagerBuilder(printer, dataReader).build();
         try {
             library = fileManager.importData();
-            printer.printLine("Zaimportowano dane z pliku");
+            printer.printLine("Zaimportowane dane z pliku");
         } catch (DataImportException | InvalidDataException e) {
             printer.printLine(e.getMessage());
             printer.printLine("Zainicjowano nową bazę.");
             library = new Library();
         }
-
     }
 
     void controlLoop() {
@@ -63,6 +53,12 @@ public class LibraryControl {
                 case DELETE_MAGAZINE:
                     deleteMagazine();
                     break;
+                case ADD_USER:
+                    addUser();
+                    break;
+                case PRINT_USERS:
+                    printUsers();
+                    break;
                 case EXIT:
                     exit();
                     break;
@@ -70,6 +66,19 @@ public class LibraryControl {
                     printer.printLine("Nie ma takiej opcji, wprowadź ponownie: ");
             }
         } while (option != Option.EXIT);
+    }
+
+    private void printUsers() {
+        printer.printUsers(library.getUsers().values());
+    }
+
+    private void addUser() {
+        LibraryUser libraryUser = dataReader.createLibraryUser();
+        try {
+            library.addUser(libraryUser);
+        } catch (UserAlreadyExistsException e) {
+            printer.printLine(e.getMessage());
+        }
     }
 
     private Option getOption() {
@@ -119,8 +128,7 @@ public class LibraryControl {
     }
 
     private void printBooks() {
-        Publication[] publications = getSortedPublications();
-        printer.printBooks(publications);
+        printer.printBooks(library.getPublications().values());
     }
 
     private void addMagazine() {
@@ -147,15 +155,9 @@ public class LibraryControl {
     }
 
     private void printMagazines() {
-        Publication[] publications = getSortedPublications();
-        printer.printMagazines(publications);
+        printer.printMagazines(library.getPublications().values());
     }
 
-    private Publication[] getSortedPublications() {
-        Publication[] publications = library.getPublications();
-        Arrays.sort(publications, new AlphabeticalComparator());
-        return publications;
-    }
 
     private void exit() {
         try {
@@ -176,7 +178,9 @@ public class LibraryControl {
         PRINT_BOOKS(3, "Wyświetlenie dostępnych książek"),
         PRINT_MAGAZINES(4, "WYświetlenie dostępnych magazynów/gazet"),
         DELETE_BOOK(5, "Usuś książkę"),
-        DELETE_MAGAZINE(6, "Usuń magazyn");
+        DELETE_MAGAZINE(6, "Usuń magazyn"),
+        ADD_USER(7, "Dodaj czytelników"),
+        PRINT_USERS(8, "Wyświetlanie czytelników");
 
         private int value;
         private String description;
