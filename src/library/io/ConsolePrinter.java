@@ -8,29 +8,30 @@ import library.model.Publication;
 import java.util.Collection;
 
 public class ConsolePrinter {
-
+    //zmiana typu parametru
     public void printBooks(Collection<Publication> publications) {
-        int countBooks = 0;
+        int counter = 0;
         for (Publication publication : publications) {
-            if (publication instanceof Book)
+            if(publication instanceof Book) {
                 printLine(publication.toString());
-            countBooks++;
+                counter++;
+            }
         }
-        if (countBooks == 0) {
+        if (counter == 0)
             printLine("Brak książek w bibliotece");
-        }
     }
 
+    //zmiana typu parametru
     public void printMagazines(Collection<Publication> publications) {
-        int countMagazines = 0;
+        int counter = 0;
         for (Publication publication : publications) {
-            if (publication instanceof Magazine)
+            if(publication instanceof Magazine) {
                 printLine(publication.toString());
-            countMagazines++;
+                counter++;
+            }
         }
-        if (countMagazines == 0) {
+        if (counter == 0)
             printLine("Brak magazynów w bibliotece");
-        }
     }
 
     public void printUsers(Collection<LibraryUser> users) {

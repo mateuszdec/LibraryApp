@@ -8,8 +8,7 @@ import library.io.file.FileManagerBuilder;
 import library.model.*;
 import java.util.InputMismatchException;
 
-public class LibraryControl {
-
+class LibraryControl {
     private ConsolePrinter printer = new ConsolePrinter();
     private DataReader dataReader = new DataReader(printer);
     private FileManager fileManager;
@@ -53,10 +52,10 @@ public class LibraryControl {
                 case DELETE_MAGAZINE:
                     deleteMagazine();
                     break;
-                case ADD_USER:
+                case ADD_USER: //dodano
                     addUser();
                     break;
-                case PRINT_USERS:
+                case PRINT_USERS: //dodano
                     printUsers();
                     break;
                 case EXIT:
@@ -68,19 +67,6 @@ public class LibraryControl {
         } while (option != Option.EXIT);
     }
 
-    private void printUsers() {
-        printer.printUsers(library.getUsers().values());
-    }
-
-    private void addUser() {
-        LibraryUser libraryUser = dataReader.createLibraryUser();
-        try {
-            library.addUser(libraryUser);
-        } catch (UserAlreadyExistsException e) {
-            printer.printLine(e.getMessage());
-        }
-    }
-
     private Option getOption() {
         boolean optionOk = false;
         Option option = null;
@@ -89,11 +75,12 @@ public class LibraryControl {
                 option = Option.createFromInt(dataReader.getInt());
                 optionOk = true;
             } catch (NoSuchOptionException e) {
-                printer.printLine(e.getMessage());
-            } catch (InputMismatchException e) {
-                printer.printLine("Wprowadzono wartość, która nie jest liczbą, podaj ponownie: ");
+                printer.printLine(e.getMessage() + ", podaj ponownie:");
+            } catch (InputMismatchException ignored) {
+                printer.printLine("Wprowadzono wartość, która nie jest liczbą, podaj ponownie:");
             }
         }
+
         return option;
     }
 
@@ -109,26 +96,10 @@ public class LibraryControl {
             Book book = dataReader.readAndCreateBook();
             library.addPublication(book);
         } catch (InputMismatchException e) {
-            printer.printLine("Nie udało się utworzyć książki, niepoprawne dane.");
+            printer.printLine("Nie udało się utworzyć książki, niepoprawne dane");
         } catch (ArrayIndexOutOfBoundsException e) {
             printer.printLine("Osiągnięto limit pojemności, nie można dodać kolejnej książki");
         }
-    }
-
-    private void deleteBook() {
-        try {
-            Book book = dataReader.readAndCreateBook();
-            if (library.removePublication(book))
-                printer.printLine("Usunięto książkę");
-            else
-                printer.printLine("Brak wskazanej książki");
-        } catch (InputMismatchException e) {
-            printer.printLine("Nie udało się usunąć książki, niepoprawne dane");
-        }
-    }
-
-    private void printBooks() {
-        printer.printBooks(library.getPublications().values());
     }
 
     private void addMagazine() {
@@ -136,28 +107,60 @@ public class LibraryControl {
             Magazine magazine = dataReader.readAndCreateMagazine();
             library.addPublication(magazine);
         } catch (InputMismatchException e) {
-            printer.printLine("Nie udało się utworzyć magazynu, niepoprawne dane.");
+            printer.printLine("Nie udało się utworzyć magazynu, niepoprawne dane");
         } catch (ArrayIndexOutOfBoundsException e) {
             printer.printLine("Osiągnięto limit pojemności, nie można dodać kolejnego magazynu");
         }
     }
 
-    private void deleteMagazine() {
+    //dodano
+    private void addUser() {
+        LibraryUser libraryUser = dataReader.createLibraryUser();
         try {
-        Magazine magazine = dataReader.readAndCreateMagazine();
-        if (library.removePublication(magazine))
-            printer.printLine("Usunięto magazyn");
-        else
-            printer.printLine("Brak wskazanego magazynu");
-        } catch (InputMismatchException e) {
-            printer.printLine("Nie udało się usunąć magazynu, niepoprawne dane");
+            library.addUser(libraryUser);
+        } catch (UserAlreadyExistsException e) {
+            printer.printLine(e.getMessage());
         }
     }
 
+    //zmiana logiki
+    private void printBooks() {
+        printer.printBooks(library.getPublications().values());
+    }
+
+    //zmiana logiki
     private void printMagazines() {
         printer.printMagazines(library.getPublications().values());
     }
 
+    //dodano
+    private void printUsers() {
+        printer.printUsers(library.getUsers().values());
+    }
+
+    private void deleteMagazine() {
+        try {
+            Magazine magazine = dataReader.readAndCreateMagazine();
+            if (library.removePublication(magazine))
+                printer.printLine("Usunięto magazyn.");
+            else
+                printer.printLine("Brak wskazanego magazynu.");
+        } catch (InputMismatchException e) {
+            printer.printLine("Nie udało się utworzyć magazynu, niepoprawne dane");
+        }
+    }
+
+    private void deleteBook() {
+        try {
+            Book book = dataReader.readAndCreateBook();
+            if (library.removePublication(book))
+                printer.printLine("Usunięto książkę.");
+            else
+                printer.printLine("Brak wskazanej książki.");
+        } catch (InputMismatchException e) {
+            printer.printLine("Nie udało się utworzyć książki, niepoprawne dane");
+        }
+    }
 
     private void exit() {
         try {
@@ -166,32 +169,23 @@ public class LibraryControl {
         } catch (DataExportException e) {
             printer.printLine(e.getMessage());
         }
-        printer.printLine("Koniec programu, papa!");
-        // zamykamy strumień wejścia
         dataReader.close();
+        printer.printLine("Koniec programu, papa!");
     }
 
-    public enum Option {
+    private enum Option {
         EXIT(0, "Wyjście z programu"),
         ADD_BOOK(1, "Dodanie książki"),
-        ADD_MAGAZINE(2,"Dodanie magazynu/gazety"),
+        ADD_MAGAZINE(2, "Dodanie magazynu/gazety"),
         PRINT_BOOKS(3, "Wyświetlenie dostępnych książek"),
-        PRINT_MAGAZINES(4, "WYświetlenie dostępnych magazynów/gazet"),
-        DELETE_BOOK(5, "Usuś książkę"),
+        PRINT_MAGAZINES(4, "Wyświetlenie dostępnych magazynów/gazet"),
+        DELETE_BOOK(5, "Usuń książkę"),
         DELETE_MAGAZINE(6, "Usuń magazyn"),
-        ADD_USER(7, "Dodaj czytelników"),
-        PRINT_USERS(8, "Wyświetlanie czytelników");
+        ADD_USER(7, "Dodaj czytelnika"), //dodano
+        PRINT_USERS(8, "Wyświetl czytelników"); //dodano
 
         private int value;
         private String description;
-
-        public int getValue() {
-            return value;
-        }
-
-        public String getDescription() {
-            return description;
-        }
 
         Option(int value, String desc) {
             this.value = value;

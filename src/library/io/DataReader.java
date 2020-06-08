@@ -26,6 +26,10 @@ public class DataReader {
         }
     }
 
+    public String getString() {
+        return sc.nextLine();
+    }
+
     public Book readAndCreateBook() {
         printer.printLine("Tytuł: ");
         String title = sc.nextLine();
@@ -41,16 +45,6 @@ public class DataReader {
         int pages = getInt();
 
         return new Book(title, author, releaseDate, pages, publisher, isbn);
-    }
-
-    public LibraryUser createLibraryUser() {
-        printer.printLine("Imię");
-        String firstName = sc.nextLine();
-        printer.printLine("Nazwisko");
-        String lastName = sc.nextLine();
-        printer.printLine("Pesel");
-        String pesel = sc.nextLine();
-        return new LibraryUser(firstName, lastName, pesel);
     }
 
     public Magazine readAndCreateMagazine() {
@@ -70,7 +64,14 @@ public class DataReader {
         return new Magazine(title, publisher, language, year, month, day);
     }
 
-    public String getString() {
-        return sc.nextLine();
+    public LibraryUser createLibraryUser() {
+        printer.printLine("Imię");
+        String firstName = sc.nextLine();
+        printer.printLine("Nazwisko");
+        String lastName = sc.nextLine();
+        printer.printLine("Pesel");
+        String pesel = sc.nextLine();
+        return new LibraryUser(firstName, lastName, pesel);
     }
+
 }

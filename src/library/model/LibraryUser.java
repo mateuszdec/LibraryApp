@@ -8,10 +8,6 @@ public class LibraryUser extends User {
     private List<Publication> publicationHistory = new ArrayList<>();
     private List<Publication> borrowedPublications = new ArrayList<>();
 
-    public LibraryUser(String firstName, String lastName, String pesel) {
-        super(firstName, lastName, pesel);
-    }
-
     public List<Publication> getPublicationHistory() {
         return publicationHistory;
     }
@@ -20,7 +16,16 @@ public class LibraryUser extends User {
         return borrowedPublications;
     }
 
-    public void addPublicationToHistory(Publication pub) {
+    public LibraryUser(String firstName, String lastName, String pesel) {
+        super(firstName, lastName, pesel);
+    }
+
+    @Override
+    public String toCsv() {
+        return getFirstName() + ";" + getLastName() + ";" + getPesel();
+    }
+
+    private void addPublicationToHistory(Publication pub) {
         publicationHistory.add(pub);
     }
 
@@ -30,18 +35,13 @@ public class LibraryUser extends User {
 
     public boolean returnPublication(Publication pub) {
         boolean result = false;
-        if (borrowedPublications.contains(pub)) {
-            borrowedPublications.remove(pub);
-            addPublicationToHistory(pub);
+        if (borrowedPublications.remove(pub)) {
             result = true;
+            addPublicationToHistory(pub);
         }
         return result;
     }
 
-    @Override
-    public String toCsv() {
-        return getFirstName() + ";" + getLastName() + ";" + getPesel();
-    }
 
     @Override
     public boolean equals(Object o) {

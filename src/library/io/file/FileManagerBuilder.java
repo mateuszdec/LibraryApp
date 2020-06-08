@@ -14,13 +14,13 @@ public class FileManagerBuilder {
     }
 
     public FileManager build() {
-        printer.printLine("Wybierz format danych: ");
+        printer.printLine("Wybierz format danych:");
         FileType fileType = getFileType();
         switch (fileType) {
-            case SERIAL:
-                return new SerializableFileManager();
             case CSV:
                 return new CsvFileManager();
+            case SERIAL:
+                return new SerializableFileManager();
             default:
                 throw new NoSuchFileTypeException("Nieobsługiwany typ danych");
         }
@@ -39,6 +39,7 @@ public class FileManagerBuilder {
                 printer.printLine("Nieobsługiwany typ danych, wybierz ponownie.");
             }
         } while (!typeOk);
+
         return result;
     }
 
